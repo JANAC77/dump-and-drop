@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { User, LogIn, UserPlus, Menu, X } from "lucide-react"; 
 import LoginForm from "./LoginForm";
 import dumpLogo from "../assets/images/DUMP.png";
@@ -21,74 +21,73 @@ function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Updated style: added whitespace-nowrap to prevent text splitting
-  const navLinkStyle = "relative flex items-center gap-3 text-gray-800 hover:text-blue-600 font-bold transition-all duration-300 text-[15px] cursor-pointer group px-4 py-2 whitespace-nowrap after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-blue-600 after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100";
+  // Premium nav link styling with gradient effects
+  const navLinkStyle = "relative flex items-center text-blue-100 hover:text-cyan-300 font-semibold transition-all duration-300 text-[14px] cursor-pointer group px-4 py-2 whitespace-nowrap after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-gradient-to-r after:from-cyan-400 after:to-blue-400 after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100 hover:bg-white/5 rounded-lg";
+  
+  const getNavLinkClass = ({ isActive }) => 
+    isActive 
+      ? "relative flex items-center text-cyan-300 font-semibold transition-all duration-300 text-[14px] cursor-pointer group px-4 py-2 whitespace-nowrap after:absolute after:bottom-0 after:left-0 after:h-[3px] after:w-full after:bg-gradient-to-r after:from-cyan-400 after:to-blue-400 after:scale-x-100 bg-white/10 rounded-lg"
+      : navLinkStyle;
   
   const navLinks = [
     { 
       name: "Car Pooling", 
       href: "/", 
-      icon: <img src="/src/assets/images/car-icon.png" alt="Car Pooling" className="w-15 h-15 object-contain" />
     },
     { 
       name: "Goods Delivery", 
       href: "/goodsservices", 
-      icon: <img src="/src/assets/images/delivery-icon.png" alt="Goods Delivery" className="w-15 h-15 object-contain" />
     },
     { 
       name: "About", 
       href: "/about", 
-      icon: <img src="/src/assets/images/about-icon.png" alt="About" className="w-10 h-10 object-contain" />
     },
     { 
       name: "Blog", 
       href: "/blog", 
-      icon: <img src="/src/assets/images/blog-icon.png" alt="Blog" className="w-10 h-10 object-contain" />
     },
     { 
       name: "Contact Us", 
       href: "/contact", 
-      icon: <img src="/src/assets/images//contact-icon.png" alt="Contact Us" className="w-10 h-10 object-contain" />
     }
   ];
 
   return (
     <>
-      <nav className="w-full bg-white shadow-sm border-b border-gray-200 sticky top-0 z-[100] px-6 lg:px-16">
-        <div className="max-w-7xl mx-auto flex items-center justify-between h-24"> {/* Increased height to h-24 to accommodate w-15 icons */}
+      <nav className="w-full bg-gradient-to-r from-slate-900 via-blue-900 to-blue-800 backdrop-blur-xl shadow-2xl shadow-blue-900/50 sticky top-0 z-[100] px-4 sm:px-6 lg:px-16 border-b border-blue-700/50">
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-20">
           
           {/* 1. Hamburger (Mobile) */}
           <div className="md:hidden flex">
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
-              {mobileMenuOpen ? <X size={28} className="text-blue-600" /> : <Menu size={28} />}
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 hover:bg-white/10 rounded-lg transition-colors duration-200">
+              {mobileMenuOpen ? <X size={28} className="text-cyan-400" /> : <Menu size={28} className="text-white" />}
             </button>
           </div>
 
           {/* 2. Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-1">
     
                 {/* Logo Image */}
                 <img
                   src={dumpLogo}
                   alt="Dump & Drop Logo"
-                  className="h-24 w-24 md:h-24 md:w-24 object-contain"
+                  className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 object-contain drop-shadow-lg"
                 />
                 {/* Brand Name */}
-                <span className="text-xl md:text-2xl font-extrabold text-gray-900 tracking-tighter">
-                  Dump <span className="text-blue-600">&</span> Drop
+                <span className="text-lg sm:text-xl md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-200 to-white tracking-tighter">
+                  Dump <span className="text-cyan-400">&</span> Drop
                 </span>
 
               </Link>
           </div>
 
-          {/* 3. Desktop Navigation - Added 'flex-nowrap' here */}
-          <div className="hidden md:flex flex-nowrap items-center justify-center space-x-1 lg:space-x-4">
+          {/* 3. Desktop Navigation */}
+          <div className="hidden md:flex items-center justify-center space-x-2 sm:space-x-4 lg:space-x-6">
             {navLinks.map((link) => (
-              <Link key={link.name} to={link.href} className={navLinkStyle}>
-                <span className="shrink-0">{link.icon}</span>
+              <NavLink key={link.name} to={link.href} className={getNavLinkClass}>
                 <span>{link.name}</span>
-              </Link>
+              </NavLink>
             ))}
           </div>
 
@@ -97,9 +96,9 @@ function Navbar() {
             <button
               onClick={() => setOpen(!open)}
               className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 border-2 
-                ${open ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-blue-400 bg-gray-50"}`}
+                ${open ? "border-cyan-400 bg-cyan-500/20" : "border-blue-400/30 hover:border-cyan-400 bg-blue-500/10 hover:bg-cyan-500/20"}`}
             >
-              <User className={open ? "text-blue-600" : "text-gray-600"} size={20} />
+              <User className={open ? "text-cyan-300" : "text-white"} size={20} />
             </button>
 
             {open && (
@@ -119,13 +118,12 @@ function Navbar() {
 
         {/* 5. Mobile Menu Overlay */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute left-0 top-20 w-full bg-white border-b border-gray-200 shadow-lg">
-            <div className="flex flex-col p-4 space-y-1">
+          <div className="md:hidden absolute left-0 top-20 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-xl rounded-b-xl transition-all duration-300 ease-in-out">
+            <div className="flex flex-col p-4 space-y-2">
               {navLinks.map((link) => (
-                <Link key={link.name} to={link.href} onClick={() => setMobileMenuOpen(false)} className={navLinkStyle}>
-                  {link.icon}
+                <NavLink key={link.name} to={link.href} onClick={() => setMobileMenuOpen(false)} className={getNavLinkClass}>
                   <span>{link.name}</span>
-                </Link>
+                </NavLink>
               ))}
             </div>
           </div>
